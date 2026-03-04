@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🧧 Lì xì random (1.000–500.000đ)</title>
+  <style>
+    :root{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    body{
+      margin:0; min-height:100vh; display:grid; place-items:center;
+      background: radial-gradient(1100px 760px at 50% 0%, #fff, #f3f4f6);
+      color:#111827;
+    }
+    .wrap{ width:min(640px, 92vw); }
+    .card{
+      background:#fff; border:1px solid #e5e7eb; border-radius:18px;
+      padding:18px 16px; box-shadow: 0 14px 40px rgba(0,0,0,.08);
+      text-align:center;
+    }
+    h1{ margin:6px 0 2px; font-size:22px; }
+    .sub{ margin:0 0 14px; color:#6b7280; font-size:14px; line-height:1.35; }
+
+    /* Envelope */
+    .envelope-area{ display:grid; place-items:center; margin: 14px 0 10px; }
+    .envelope{
+      width:min(320px, 86vw);
+      aspect-ratio: 3/4;
+      border-radius:22px;
+      background: linear-gradient(180deg, #ef4444, #b91c1c);
+      position:relative;
+      box-shadow: 0 18px 46px rgba(185,28,28,.25);
+      overflow:hidden;
+      user-select:none;
+    }
+    .envelope::before{
+      content:""; position:absolute; inset:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.22);
+    }
+    .pattern{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,255,255,.10), transparent 28%),
+        radial-gradient(circle at 80% 35%, rgba(255,255,255,.08), transparent 30%),
+        radial-gradient(circle at 35% 80%, rgba(255,255,255,.06), transparent 35%);
+      opacity:.8;
+    }
+
+    .seal{
+      position:absolute;
+      left:50%; top:54%;
+      transform: translate(-50%,-50%);
+      width:96px; height:96px;
+      border-radius:999px;
+      background: radial-gradient(circle at 35% 30%, #fde68a, #f59e0b);
+      box-shadow: 0 10px 22px rgba(0,0,0,.18);
+      display:grid; place-items:center;
+      border: 2px solid rgba(255,255,255,.32);
+    }
+    .seal span{
+      font-weight:900; font-size:18px; color:#7c2d12;
+      letter-spacing:.8px;
+    }
+
+    .lid{
+      position:absolute; left:0; right:0; top:-6%;
+      height:52%;
+      background: linear-gradient(180deg, #f87171, #ef4444);
+      transform-origin: 50% 100%;
+      transform: rotateX(0deg);
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%);
+      box-shadow: inset 0 -10px 18px rgba(0,0,0,.08);
+      transition: transform .7s cubic-bezier(.2,.8,.2,1);
+    }
+    .open .lid{ transform: rotateX(155deg); }
+
+    .content{
+      position:absolute; left:0; right:0; bottom:0; top:18%;
+      display:grid; place-items:center;
+      padding:16px;
+    }
+    .amount{
+      font-size:44px; font-weight:950;
+      color:#fff7ed;
+      text-shadow: 0 6px 18px rgba(0,0,0,.25);
+      letter-spacing:.3px;
+    }
+    .unit{ display:block; font-size:14px; font-weight:800; color:rgba(255,255,255,.88); margin-top:6px; }
+
+    .pill{
+      display:inline-block; padding:6px 10px; border-radius:999px;
+      background:#f3f4f6; border:1px solid #e5e7eb; color:#374151;
+      font-size:12px; margin-top:10px;
+    }
+    .locked{
+      margin-top:10px; font-size:13px; font-weight:800;
+      color:#16a34a; display:none;
+    }
+    .locked.show{ display:block; }
+
+    .btn{
+      width:100%;
+      padding:14px 14px;
+      border:none; border-radius:14px;
+      font-size:16px; font-weight:900;
+      background:#ef4444; color:#fff;
+      cursor:pointer;
+      transition: transform .05s ease, opacity .2s ease;
+    }
+    .btn:active{ transform: scale(.99); }
+    .btn[disabled]{ opacity:.55; cursor:not-allowed; }
+
+    .row{ display:flex; gap:10px; margin-top:10px; }
+    .btn.secondary{ background:#111827; }
+
+    .note{
+      margin-top:12px; font-size:12.5px; color:#6b7280; line-height:1.35;
+      text-align:left;
+    }
+    .admin-badge{
+      display:none;
+      margin: 10px auto 0;
+      width: fit-content;
+      padding:6px 10px; border-radius:999px;
+      background:#111827; color:#fff; font-size:12px; font-weight:800;
+    }
+
+    /* Shake */
+    .shake{ animation: shake .6s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake{
+      10%, 90% { transform: translate3d(-1px, 0, 0) rotate(-2deg); }
+      20%, 80% { transform: translate3d(2px, 0, 0) rotate(2deg); }
+      30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotate(-3deg); }
+      40%, 60% { transform: translate3d(4px, 0, 0) rotate(3deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>🧧 Lì xì random</h1>
+      <p class="sub">
+        Random từ <b>1.000đ → 500.000đ</b> (bước <b>1.000đ</b>).<br>
+        Mỗi người <b>chỉ mở 1 lần</b> • Riêng bạn có thể mở nhiều lần bằng chế độ <b>admin</b>.
+      </p>
+
+      <div class="envelope-area">
+        <div id="envelope" class="envelope" aria-label="Bao lì xì">
+          <div class="pattern"></div>
+          <div class="lid"></div>
+          <div class="content">
+            <div>
+              <div id="amount" class="amount">?</div>
+              <span class="unit">VND</span>
+            </div>
+          </div>
+          <div class="seal"><span>LÌ XÌ</span></div>
+        </div>
+
+        <div id="pill" class="pill">Chưa mở bao lì xì</div>
+        <div id="lockedMsg" class="locked">Bạn đã mở rồi ✅</div>
+        <div id="adminBadge" class="admin-badge">ADMIN MODE</div>
+      </div>
+
+      <button id="rollBtn" class="btn" onclick="openEnvelope()">Mở bao lì xì</button>
+
+      <div class="row">
+        <button id="copyBtn" class="btn secondary" onclick="copyResult()" disabled>Copy số tiền</button>
+        <button id="resetBtn" class="btn secondary" onclick="resetLocal()" style="display:none;">Reset (admin)</button>
+      </div>
+
+      <p class="note">
+        <b>Cách bạn mở nhiều lần:</b> mở link kèm <code>?admin=1</code> (ví dụ: <code>...netlify.app/?admin=1</code>).<br>
+        Người khác mở link bình thường sẽ chỉ chơi được 1 lần trên mỗi trình duyệt (khóa bằng <b>localStorage</b>).
+      </p>
+    </div>
+  </div>
+
+<script>
+  const KEY = "lixi_1k_500k_lock_v2";
+  const MIN = 1000, MAX = 500000, STEP = 1000;
+
+  const envelope = document.getElementById("envelope");
+  const amountEl = document.getElementById("amount");
+  const rollBtn = document.getElementById("rollBtn");
+  const copyBtn = document.getElementById("copyBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const pill = document.getElementById("pill");
+  const lockedMsg = document.getElementById("lockedMsg");
+  const adminBadge = document.getElementById("adminBadge");
+
+  // Admin mode: add ?admin=1 to URL
+  const params = new URLSearchParams(location.search);
+  const isAdmin = params.get("admin") === "1" || params.get("admin") === "true";
+
+  function formatVND(n){
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  function randomAmount(){
+    const steps = Math.floor((MAX - MIN) / STEP) + 1; // inclusive
+    const k = Math.floor(Math.random() * steps);
+    return MIN + k * STEP;
+  }
+
+  function setUIState({locked, value, opened}){
+    // opened controls animation
+    if(opened) envelope.classList.add("open");
+    else envelope.classList.remove("open");
+
+    if(value != null) amountEl.textContent = formatVND(value);
+    else amountEl.textContent = "?";
+
+    copyBtn.disabled = (value == null);
+
+    if(isAdmin){
+      adminBadge.style.display = "inline-block";
+      resetBtn.style.display = "inline-block";
+      lockedMsg.classList.remove("show");
+      rollBtn.disabled = false;
+      rollBtn.textContent = "Mở bao lì xì";
+      return;
+    }
+
+    // Non-admin: lock after one play
+    rollBtn.disabled = locked;
+    lockedMsg.classList.toggle("show", locked);
+    rollBtn.textContent = locked ? "Đã mở" : "Mở bao lì xì";
+  }
+
+  function saveResult(value){
+    localStorage.setItem(KEY, JSON.stringify({ value, at: new Date().toISOString() }));
+  }
+
+  function getSaved(){
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return null;
+    try { return JSON.parse(raw); } catch { return null; }
+  }
+
+  function openEnvelope(){
+    if(!isAdmin && localStorage.getItem(KEY)) return;
+
+    envelope.classList.remove("shake");
+    void envelope.offsetWidth;
+    envelope.classList.add("shake");
+
+    pill.textContent = "Đang mở...";
+    rollBtn.disabled = true;
+
+    setTimeout(() => {
+      const value = randomAmount();
+      amountEl.textContent = formatVND(value);
+      envelope.classList.add("open");
+      pill.textContent = "Chúc mừng năm mới!";
+      copyBtn.disabled = false;
+
+      if(!isAdmin){
+        saveResult(value);
+        setUIState({locked:true, value, opened:true});
+      } else {
+        // admin can open repeatedly without saving lock
+        setUIState({locked:false, value, opened:true});
+        rollBtn.disabled = false;
+      }
+    }, 650);
+  }
+
+  function copyResult(){
+    const text = amountEl.textContent.replaceAll(".", "");
+    if(!text || text === "?") return;
+    navigator.clipboard.writeText(text);
+    pill.textContent = "Đã copy ✅";
+    setTimeout(()=> pill.textContent = "Chúc mừng năm mới!", 900);
+  }
+
+  function resetLocal(){
+    // only useful for admin on the same machine
+    localStorage.removeItem(KEY);
+    envelope.classList.remove("open");
+    amountEl.textContent = "?";
+    pill.textContent = "Đã reset";
+    copyBtn.disabled = true;
+    setTimeout(()=> pill.textContent = "Chưa mở bao lì xì", 900);
+  }
+
+  // init
+  if(isAdmin){
+    setUIState({locked:false, value:null, opened:false});
+    pill.textContent = "Admin: bạn có thể mở nhiều lần";
+  } else {
+    const saved = getSaved();
+    if(saved && typeof saved.value === "number"){
+      setUIState({locked:true, value:saved.value, opened:true});
+      pill.textContent = "Đã mở trước đó";
+    } else {
+      setUIState({locked:false, value:null, opened:false});
+      pill.textContent = "Chưa mở bao lì xì";
+    }
+  }
+</script>
+</body>
+</html>
