@@ -3,303 +3,834 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🧧 Lì xì random (1.000–500.000đ)</title>
-  <style>
-    :root{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
-    body{
-      margin:0; min-height:100vh; display:grid; place-items:center;
-      background: radial-gradient(1100px 760px at 50% 0%, #fff, #f3f4f6);
-      color:#111827;
-    }
-    .wrap{ width:min(640px, 92vw); }
-    .card{
-      background:#fff; border:1px solid #e5e7eb; border-radius:18px;
-      padding:18px 16px; box-shadow: 0 14px 40px rgba(0,0,0,.08);
-      text-align:center;
-    }
-    h1{ margin:6px 0 2px; font-size:22px; }
-    .sub{ margin:0 0 14px; color:#6b7280; font-size:14px; line-height:1.35; }
+  <title>🧧 Lì xì đầu năm</title>
+  <meta name="description" content="Mini game lì xì random 1.000–500.000đ. Mỗi người 1 lần. Admin thử nhiều lần." />
 
-    /* Envelope */
-    .envelope-area{ display:grid; place-items:center; margin: 14px 0 10px; }
-    .envelope{
-      width:min(320px, 86vw);
-      aspect-ratio: 3/4;
-      border-radius:22px;
-      background: linear-gradient(180deg, #ef4444, #b91c1c);
+  <style>
+    :root{
+      --bg1:#fff7ed;
+      --bg2:#fef2f2;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --red1:#ff4d4f;
+      --red2:#c81e1e;
+      --gold1:#fde68a;
+      --gold2:#f59e0b;
+      --shadow: 0 24px 60px rgba(15, 23, 42, .12);
+      --shadow2: 0 14px 40px rgba(200,30,30,.22);
+      --radius: 22px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 50% -10%, var(--bg1), transparent 60%),
+        radial-gradient(900px 600px at 20% 0%, var(--bg2), transparent 55%),
+        #f8fafc;
+      display:grid;
+      place-items:center;
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      width:min(760px, 92vw);
+      padding: 26px 0;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.98));
+      border:1px solid rgba(148,163,184,.22);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
       position:relative;
-      box-shadow: 0 18px 46px rgba(185,28,28,.25);
+      overflow:hidden;
+    }
+
+    /* subtle sparkles */
+    .card::before{
+      content:"";
+      position:absolute; inset:-80px -120px auto -120px;
+      height:260px;
+      background: radial-gradient(circle at 20% 40%, rgba(245,158,11,.20), transparent 42%),
+                  radial-gradient(circle at 70% 30%, rgba(239,68,68,.18), transparent 42%),
+                  radial-gradient(circle at 45% 70%, rgba(250,204,21,.14), transparent 40%);
+      filter: blur(1px);
+      pointer-events:none;
+    }
+
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    h1{
+      margin: 2px 0 4px;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+    .subtitle{
+      margin:0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.35;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(148,163,184,.28);
+      background: rgba(255,255,255,.75);
+      backdrop-filter: blur(6px);
+      font-size: 12px;
+      color: #334155;
+      user-select:none;
+      box-shadow: 0 10px 24px rgba(15,23,42,.06);
+      white-space:nowrap;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background:#22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,.14);
+    }
+    .dot.admin{ background:#111827; box-shadow: 0 0 0 4px rgba(17,24,39,.12); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
+      position:relative;
+      z-index:1;
+    }
+    @media (min-width: 720px){
+      .grid{ grid-template-columns: 1.05fr .95fr; gap: 16px; align-items:stretch; }
+    }
+
+    /* Envelope stage */
+    .stage{
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,.20);
+      background: rgba(255,255,255,.60);
+      box-shadow: 0 12px 30px rgba(15,23,42,.05);
+      padding: 16px 14px;
+      display:grid;
+      place-items:center;
+      min-height: 420px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .stage::before{
+      content:"";
+      position:absolute; inset:-120px;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(239,68,68,.10), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(245,158,11,.10), transparent 42%),
+        radial-gradient(circle at 45% 80%, rgba(239,68,68,.06), transparent 44%);
+      pointer-events:none;
+    }
+
+    .envelope{
+      width:min(330px, 86vw);
+      aspect-ratio: 3/4;
+      border-radius: 26px;
+      background: linear-gradient(180deg, var(--red1), var(--red2));
+      position:relative;
+      box-shadow: var(--shadow2);
       overflow:hidden;
       user-select:none;
+      transform: translateZ(0);
     }
-    .envelope::before{
-      content:""; position:absolute; inset:14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.22);
+
+    .envelope .border{
+      position:absolute; inset:14px;
+      border-radius: 20px;
+      border:1px solid rgba(255,255,255,.24);
+      pointer-events:none;
     }
-    .pattern{
+
+    /* glossy */
+    .envelope::after{
+      content:"";
       position:absolute; inset:0;
       background:
-        radial-gradient(circle at 20% 15%, rgba(255,255,255,.10), transparent 28%),
-        radial-gradient(circle at 80% 35%, rgba(255,255,255,.08), transparent 30%),
-        radial-gradient(circle at 35% 80%, rgba(255,255,255,.06), transparent 35%);
-      opacity:.8;
+        radial-gradient(900px 420px at 30% 10%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(600px 420px at 80% 40%, rgba(255,255,255,.10), transparent 60%);
+      pointer-events:none;
+      mix-blend-mode: screen;
     }
 
-    .seal{
-      position:absolute;
-      left:50%; top:54%;
-      transform: translate(-50%,-50%);
-      width:96px; height:96px;
-      border-radius:999px;
-      background: radial-gradient(circle at 35% 30%, #fde68a, #f59e0b);
-      box-shadow: 0 10px 22px rgba(0,0,0,.18);
-      display:grid; place-items:center;
-      border: 2px solid rgba(255,255,255,.32);
-    }
-    .seal span{
-      font-weight:900; font-size:18px; color:#7c2d12;
-      letter-spacing:.8px;
-    }
-
-    .lid{
+    .flap{
       position:absolute; left:0; right:0; top:-6%;
-      height:52%;
-      background: linear-gradient(180deg, #f87171, #ef4444);
+      height:54%;
+      background: linear-gradient(180deg, #ff6b6b, #ef4444);
       transform-origin: 50% 100%;
       transform: rotateX(0deg);
-      border-bottom: 1px solid rgba(255,255,255,.18);
       clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%);
-      box-shadow: inset 0 -10px 18px rgba(0,0,0,.08);
-      transition: transform .7s cubic-bezier(.2,.8,.2,1);
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      box-shadow: inset 0 -12px 18px rgba(0,0,0,.10);
+      transition: transform .85s cubic-bezier(.2,.9,.2,1);
+      z-index: 3;
     }
-    .open .lid{ transform: rotateX(155deg); }
 
     .content{
-      position:absolute; left:0; right:0; bottom:0; top:18%;
-      display:grid; place-items:center;
-      padding:16px;
+      position:absolute; inset: 16% 0 0 0;
+      display:grid;
+      place-items:center;
+      padding: 18px;
+      z-index: 2;
+      transition: transform .35s ease;
     }
-    .amount{
-      font-size:44px; font-weight:950;
-      color:#fff7ed;
-      text-shadow: 0 6px 18px rgba(0,0,0,.25);
-      letter-spacing:.3px;
-    }
-    .unit{ display:block; font-size:14px; font-weight:800; color:rgba(255,255,255,.88); margin-top:6px; }
 
-    .pill{
-      display:inline-block; padding:6px 10px; border-radius:999px;
-      background:#f3f4f6; border:1px solid #e5e7eb; color:#374151;
-      font-size:12px; margin-top:10px;
+    .coin{
+      width: 102px;
+      height: 102px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 28%, var(--gold1), var(--gold2));
+      box-shadow: 0 14px 26px rgba(0,0,0,.18);
+      display:grid;
+      place-items:center;
+      border:2px solid rgba(255,255,255,.36);
+      position:absolute;
+      left:50%;
+      top: 62%;
+      transform: translate(-50%,-50%);
+      z-index: 5;
+      transition: opacity .35s ease, transform .35s ease;
     }
-    .locked{
-      margin-top:10px; font-size:13px; font-weight:800;
-      color:#16a34a; display:none;
+    .coin span{
+      font-weight: 950;
+      color:#7c2d12;
+      letter-spacing: .8px;
+      font-size: 18px;
     }
-    .locked.show{ display:block; }
+
+    .amountBox{
+      text-align:center;
+      transform: translateY(8px);
+      transition: transform .35s ease, opacity .35s ease;
+    }
+
+    .amount{
+      font-size: 46px;
+      font-weight: 950;
+      color: #fff7ed;
+      text-shadow: 0 10px 24px rgba(0,0,0,.22);
+      letter-spacing: .4px;
+      line-height: 1.05;
+    }
+    .unit{
+      display:block;
+      margin-top: 6px;
+      font-size: 12.5px;
+      font-weight: 900;
+      letter-spacing: 1.4px;
+      color: rgba(255,255,255,.86);
+    }
+
+    .open .flap{ transform: rotateX(160deg); }
+    .open .content{ transform: translateY(-10px); }
+    .open .coin{ opacity:0; transform: translate(-50%,-55%) scale(.92); pointer-events:none; }
+
+    /* shake */
+    .shake{ animation: shake .62s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake{
+      10%, 90% { transform: translate3d(-1px,0,0) rotate(-2deg); }
+      20%, 80% { transform: translate3d(2px,0,0) rotate(2deg); }
+      30%, 50%, 70% { transform: translate3d(-4px,0,0) rotate(-3deg); }
+      40%, 60% { transform: translate3d(4px,0,0) rotate(3deg); }
+    }
+
+    /* Right panel */
+    .panel{
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,.20);
+      background: rgba(255,255,255,.70);
+      box-shadow: 0 12px 30px rgba(15,23,42,.05);
+      padding: 16px 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      min-height: 420px;
+      position:relative;
+      overflow:hidden;
+    }
+    .panel::before{
+      content:"";
+      position:absolute; inset:-120px;
+      background: radial-gradient(circle at 20% 20%, rgba(245,158,11,.10), transparent 40%),
+                  radial-gradient(circle at 70% 30%, rgba(239,68,68,.08), transparent 40%);
+      pointer-events:none;
+    }
+    .panel > *{ position:relative; z-index:1; }
+
+    label{ font-size: 12.5px; font-weight: 800; color:#334155; }
+    .row{ display:flex; gap:10px; }
+    .field{
+      width:100%;
+      border-radius: 14px;
+      border:1px solid rgba(148,163,184,.28);
+      background: rgba(255,255,255,.92);
+      padding: 12px 12px;
+      font-size: 15px;
+      outline:none;
+    }
+    .field:focus{ border-color: rgba(239,68,68,.55); box-shadow: 0 0 0 4px rgba(239,68,68,.10); }
 
     .btn{
       width:100%;
-      padding:14px 14px;
-      border:none; border-radius:14px;
-      font-size:16px; font-weight:900;
-      background:#ef4444; color:#fff;
+      border:none;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-weight: 900;
+      font-size: 15px;
       cursor:pointer;
-      transition: transform .05s ease, opacity .2s ease;
+      transition: transform .06s ease, opacity .2s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      user-select:none;
     }
     .btn:active{ transform: scale(.99); }
     .btn[disabled]{ opacity:.55; cursor:not-allowed; }
 
-    .row{ display:flex; gap:10px; margin-top:10px; }
-    .btn.secondary{ background:#111827; }
+    .btn.primary{ background: linear-gradient(180deg, #ff4d4f, #c81e1e); color:white; box-shadow: 0 10px 24px rgba(200,30,30,.26); }
+    .btn.dark{ background: #0f172a; color:white; }
+    .btn.ghost{ background: rgba(255,255,255,.75); border:1px solid rgba(148,163,184,.26); color:#0f172a; }
 
-    .note{
-      margin-top:12px; font-size:12.5px; color:#6b7280; line-height:1.35;
-      text-align:left;
+    .hint{
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.35;
     }
-    .admin-badge{
+    .kpi{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .kpi .box{
+      border-radius: 16px;
+      border:1px solid rgba(148,163,184,.22);
+      background: rgba(255,255,255,.75);
+      padding: 12px 12px;
+    }
+    .kpi .t{ font-size:12px; color: var(--muted); font-weight:800; }
+    .kpi .v{ margin-top:4px; font-size:16px; font-weight:950; }
+
+    .status{
+      margin-top: 6px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px dashed rgba(148,163,184,.40);
+      background: rgba(255,255,255,.65);
+      font-size: 13px;
+      color:#0f172a;
+      line-height: 1.35;
+    }
+    .ok{ color:#16a34a; font-weight: 900; }
+    .warn{ color:#b45309; font-weight: 900; }
+    .err{ color:#dc2626; font-weight: 900; }
+
+    .footer{
+      margin-top: 10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      justify-content:space-between;
+      align-items:center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    code{ background: rgba(15,23,42,.06); padding: 2px 6px; border-radius: 8px; }
+    a{ color: #c81e1e; text-decoration:none; font-weight:900; }
+    a:hover{ text-decoration:underline; }
+
+    /* Modal */
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(15,23,42,.55);
       display:none;
-      margin: 10px auto 0;
-      width: fit-content;
-      padding:6px 10px; border-radius:999px;
-      background:#111827; color:#fff; font-size:12px; font-weight:800;
+      place-items:center;
+      padding: 18px;
+      z-index: 50;
     }
+    .modal{
+      width:min(520px, 92vw);
+      background: #fff;
+      border-radius: 18px;
+      border:1px solid rgba(148,163,184,.25);
+      box-shadow: 0 22px 70px rgba(0,0,0,.25);
+      padding: 16px;
+    }
+    .modal h2{ margin: 4px 0 4px; font-size: 18px; }
+    .modal p{ margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+    .modal .actions{ display:flex; gap:10px; margin-top: 12px; }
+    .modalBack.show{ display:grid; }
 
-    /* Shake */
-    .shake{ animation: shake .6s cubic-bezier(.36,.07,.19,.97) both; }
-    @keyframes shake{
-      10%, 90% { transform: translate3d(-1px, 0, 0) rotate(-2deg); }
-      20%, 80% { transform: translate3d(2px, 0, 0) rotate(2deg); }
-      30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotate(-3deg); }
-      40%, 60% { transform: translate3d(4px, 0, 0) rotate(3deg); }
+    /* Confetti canvas */
+    #fx{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index: 60;
     }
   </style>
 </head>
 
 <body>
+  <canvas id="fx"></canvas>
+
   <div class="wrap">
     <div class="card">
-      <h1>🧧 Lì xì random</h1>
-      <p class="sub">
-        Random từ <b>1.000đ → 500.000đ</b> (bước <b>1.000đ</b>).<br>
-        Mỗi người <b>chỉ mở 1 lần</b> • Riêng bạn có thể mở nhiều lần bằng chế độ <b>admin</b>.
-      </p>
+      <header>
+        <div>
+          <!-- ✅ Bạn đổi nội dung ở đây -->
+          <h1 id="title">🧧 Lì xì đầu năm</h1>
+          <p class="subtitle" id="subtitle">
+            Random từ <b>1.000đ → 500.000đ</b> (bước <b>1.000đ</b>). Mỗi người <b>chỉ mở 1 lần</b>.
+          </p>
+        </div>
+        <div class="badge" id="modeBadge" title="Trạng thái">
+          <span class="dot" id="modeDot"></span>
+          <span id="modeText">PLAYER</span>
+        </div>
+      </header>
 
-      <div class="envelope-area">
-        <div id="envelope" class="envelope" aria-label="Bao lì xì">
-          <div class="pattern"></div>
-          <div class="lid"></div>
-          <div class="content">
-            <div>
-              <div id="amount" class="amount">?</div>
-              <span class="unit">VND</span>
+      <div class="grid">
+        <div class="stage">
+          <div class="envelope" id="envelope">
+            <div class="border"></div>
+            <div class="flap"></div>
+            <div class="content">
+              <div class="amountBox" id="amountBox">
+                <div class="amount" id="amount">?</div>
+                <span class="unit">VND</span>
+              </div>
             </div>
+            <div class="coin"><span>LÌ XÌ</span></div>
           </div>
-          <div class="seal"><span>LÌ XÌ</span></div>
         </div>
 
-        <div id="pill" class="pill">Chưa mở bao lì xì</div>
-        <div id="lockedMsg" class="locked">Bạn đã mở rồi ✅</div>
-        <div id="adminBadge" class="admin-badge">ADMIN MODE</div>
+        <div class="panel">
+          <div>
+            <label for="name">Tên người chơi</label>
+            <input id="name" class="field" placeholder="VD: Minh Anh" maxlength="40" />
+            <div class="hint" style="margin-top:8px">
+              Mẹo: nhập tên để bạn chụp màn hình kết quả gửi bạn bè.
+            </div>
+          </div>
+
+          <div class="kpi">
+            <div class="box">
+              <div class="t">Kết quả</div>
+              <div class="v" id="kpiMoney">—</div>
+            </div>
+            <div class="box">
+              <div class="t">Trạng thái</div>
+              <div class="v" id="kpiStatus">Chưa mở</div>
+            </div>
+          </div>
+
+          <button class="btn primary" id="openBtn">Mở bao lì xì</button>
+
+          <div class="row">
+            <button class="btn dark" id="copyBtn" disabled>Copy số tiền</button>
+            <button class="btn ghost" id="adminBtn">Admin</button>
+          </div>
+
+          <button class="btn ghost" id="resetBtn" style="display:none">Reset lượt (admin)</button>
+
+          <div class="status" id="statusBox">
+            <span class="warn">Lưu ý:</span> Mỗi người chỉ mở 1 lần trên mỗi trình duyệt. Admin có thể thử nhiều lần.
+          </div>
+
+          <div class="footer">
+            <span>Admin link: <code>?admin=TOKEN</code></span>
+            <span><a href="#" id="helpLink">Hướng dẫn</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin modal -->
+  <div class="modalBack" id="adminModal">
+    <div class="modal">
+      <h2>🔐 Đăng nhập Admin</h2>
+      <p>
+        Bạn có 2 cách vào admin:
+        <br>• <b>Cách 1:</b> bấm <b>Đăng nhập</b> và nhập mật khẩu.
+        <br>• <b>Cách 2:</b> mở link có <code>?admin=TOKEN</code>.
+      </p>
+
+      <label for="adminPass">Mật khẩu Admin</label>
+      <input id="adminPass" class="field" placeholder="Nhập mật khẩu..." type="password" />
+
+      <div class="actions">
+        <button class="btn dark" id="adminLoginBtn">Đăng nhập</button>
+        <button class="btn ghost" id="adminCloseBtn">Đóng</button>
       </div>
 
-      <button id="rollBtn" class="btn" onclick="openEnvelope()">Mở bao lì xì</button>
-
-      <div class="row">
-        <button id="copyBtn" class="btn secondary" onclick="copyResult()" disabled>Copy số tiền</button>
-        <button id="resetBtn" class="btn secondary" onclick="resetLocal()" style="display:none;">Reset (admin)</button>
-      </div>
-
-      <p class="note">
-        <b>Cách bạn mở nhiều lần:</b> mở link kèm <code>?admin=1</code> (ví dụ: <code>...netlify.app/?admin=1</code>).<br>
-        Người khác mở link bình thường sẽ chỉ chơi được 1 lần trên mỗi trình duyệt (khóa bằng <b>localStorage</b>).
+      <p class="hint" style="margin-top:10px">
+        ⚠️ Lưu ý: vì đây là web tĩnh, bảo mật chỉ ở mức “giữ kín link/mật khẩu”. Đừng gửi admin link cho người khác.
       </p>
     </div>
   </div>
 
+  <!-- Help modal -->
+  <div class="modalBack" id="helpModal">
+    <div class="modal">
+      <h2>📌 Hướng dẫn nhanh</h2>
+      <p>
+        • Người chơi dùng link thường: <code>https://...netlify.app</code><br>
+        • Bạn (admin) dùng: <code>https://...netlify.app/?admin=TOKEN</code><br>
+        • Hoặc bấm nút <b>Admin</b> để đăng nhập bằng mật khẩu.
+      </p>
+      <div class="actions">
+        <button class="btn ghost" id="helpCloseBtn">Đóng</button>
+      </div>
+    </div>
+  </div>
+
 <script>
-  const KEY = "lixi_1k_500k_lock_v2";
-  const MIN = 1000, MAX = 500000, STEP = 1000;
+/* =======================
+   ✅ TÙY CHỈNH ADMIN Ở ĐÂY
+   =======================
+   1) Đổi ADMIN_PASSWORD cho riêng bạn
+   2) Đổi ADMIN_TOKEN để dùng link ?admin=TOKEN
+*/
+const ADMIN_PASSWORD = "namtran123";     // <-- đổi mật khẩu admin
+const ADMIN_TOKEN    = "lixi2026";       // <-- đổi token admin (dùng trên URL)
 
-  const envelope = document.getElementById("envelope");
-  const amountEl = document.getElementById("amount");
-  const rollBtn = document.getElementById("rollBtn");
-  const copyBtn = document.getElementById("copyBtn");
-  const resetBtn = document.getElementById("resetBtn");
-  const pill = document.getElementById("pill");
-  const lockedMsg = document.getElementById("lockedMsg");
-  const adminBadge = document.getElementById("adminBadge");
+/* Game config */
+const KEY_LOCK   = "lixi_once_lock_v5";
+const KEY_RESULT = "lixi_once_result_v5";
+const MIN=1000, MAX=500000, STEP=1000;
 
-  // Admin mode: add ?admin=1 to URL
-  const params = new URLSearchParams(location.search);
-  const isAdmin = params.get("admin") === "1" || params.get("admin") === "true";
+/* Elements */
+const envelope   = document.getElementById("envelope");
+const amountEl   = document.getElementById("amount");
+const openBtn    = document.getElementById("openBtn");
+const copyBtn    = document.getElementById("copyBtn");
+const resetBtn   = document.getElementById("resetBtn");
+const adminBtn   = document.getElementById("adminBtn");
+const nameEl     = document.getElementById("name");
+const statusBox  = document.getElementById("statusBox");
+const kpiMoney   = document.getElementById("kpiMoney");
+const kpiStatus  = document.getElementById("kpiStatus");
+const modeText   = document.getElementById("modeText");
+const modeDot    = document.getElementById("modeDot");
 
-  function formatVND(n){
-    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+const adminModal = document.getElementById("adminModal");
+const adminPass  = document.getElementById("adminPass");
+const adminLoginBtn = document.getElementById("adminLoginBtn");
+const adminCloseBtn = document.getElementById("adminCloseBtn");
+
+const helpModal  = document.getElementById("helpModal");
+const helpLink   = document.getElementById("helpLink");
+const helpCloseBtn = document.getElementById("helpCloseBtn");
+
+/* Helpers */
+const params = new URLSearchParams(location.search);
+
+function formatVND(n){
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+}
+
+function randAmount(){
+  const steps = Math.floor((MAX - MIN)/STEP) + 1;
+  return MIN + Math.floor(Math.random()*steps) * STEP;
+}
+
+function setStatus(html){
+  statusBox.innerHTML = html;
+}
+
+function setMode(isAdmin){
+  if(isAdmin){
+    modeText.textContent = "ADMIN";
+    modeDot.classList.add("admin");
+    document.getElementById("modeBadge").title = "Admin mode";
+    resetBtn.style.display = "inline-flex";
+  } else {
+    modeText.textContent = "PLAYER";
+    modeDot.classList.remove("admin");
+    document.getElementById("modeBadge").title = "Player mode";
+    resetBtn.style.display = "none";
   }
+}
 
-  function randomAmount(){
-    const steps = Math.floor((MAX - MIN) / STEP) + 1; // inclusive
-    const k = Math.floor(Math.random() * steps);
-    return MIN + k * STEP;
-  }
+/* Admin auth */
+function getAdminSession(){
+  return sessionStorage.getItem("lixi_admin_ok_v5") === "1";
+}
+function setAdminSession(ok){
+  sessionStorage.setItem("lixi_admin_ok_v5", ok ? "1" : "0");
+}
 
-  function setUIState({locked, value, opened}){
-    // opened controls animation
-    if(opened) envelope.classList.add("open");
-    else envelope.classList.remove("open");
+function isAdmin(){
+  return (params.get("admin") && params.get("admin") === ADMIN_TOKEN) || getAdminSession();
+}
 
-    if(value != null) amountEl.textContent = formatVND(value);
-    else amountEl.textContent = "?";
+/* One-time lock */
+function isLocked(){
+  return localStorage.getItem(KEY_LOCK) === "1";
+}
+function lockOnce(){
+  localStorage.setItem(KEY_LOCK,"1");
+}
+function saveResult(value, name){
+  localStorage.setItem(KEY_RESULT, JSON.stringify({
+    value, name: (name||"").trim(), at: new Date().toISOString()
+  }));
+}
+function loadResult(){
+  const raw = localStorage.getItem(KEY_RESULT);
+  if(!raw) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+function clearLock(){
+  localStorage.removeItem(KEY_LOCK);
+  localStorage.removeItem(KEY_RESULT);
+}
 
-    copyBtn.disabled = (value == null);
-
-    if(isAdmin){
-      adminBadge.style.display = "inline-block";
-      resetBtn.style.display = "inline-block";
-      lockedMsg.classList.remove("show");
-      rollBtn.disabled = false;
-      rollBtn.textContent = "Mở bao lì xì";
-      return;
-    }
-
-    // Non-admin: lock after one play
-    rollBtn.disabled = locked;
-    lockedMsg.classList.toggle("show", locked);
-    rollBtn.textContent = locked ? "Đã mở" : "Mở bao lì xì";
-  }
-
-  function saveResult(value){
-    localStorage.setItem(KEY, JSON.stringify({ value, at: new Date().toISOString() }));
-  }
-
-  function getSaved(){
-    const raw = localStorage.getItem(KEY);
-    if(!raw) return null;
-    try { return JSON.parse(raw); } catch { return null; }
-  }
-
-  function openEnvelope(){
-    if(!isAdmin && localStorage.getItem(KEY)) return;
-
-    envelope.classList.remove("shake");
-    void envelope.offsetWidth;
-    envelope.classList.add("shake");
-
-    pill.textContent = "Đang mở...";
-    rollBtn.disabled = true;
-
-    setTimeout(() => {
-      const value = randomAmount();
-      amountEl.textContent = formatVND(value);
-      envelope.classList.add("open");
-      pill.textContent = "Chúc mừng năm mới!";
-      copyBtn.disabled = false;
-
-      if(!isAdmin){
-        saveResult(value);
-        setUIState({locked:true, value, opened:true});
-      } else {
-        // admin can open repeatedly without saving lock
-        setUIState({locked:false, value, opened:true});
-        rollBtn.disabled = false;
-      }
-    }, 650);
-  }
-
-  function copyResult(){
-    const text = amountEl.textContent.replaceAll(".", "");
-    if(!text || text === "?") return;
-    navigator.clipboard.writeText(text);
-    pill.textContent = "Đã copy ✅";
-    setTimeout(()=> pill.textContent = "Chúc mừng năm mới!", 900);
-  }
-
-  function resetLocal(){
-    // only useful for admin on the same machine
-    localStorage.removeItem(KEY);
+/* UI */
+function renderFromSaved(){
+  const saved = loadResult();
+  if(saved && typeof saved.value === "number"){
+    envelope.classList.add("open");
+    amountEl.textContent = formatVND(saved.value);
+    copyBtn.disabled = false;
+    kpiMoney.textContent = formatVND(saved.value) + "đ";
+    kpiStatus.textContent = "Đã mở";
+    if(saved.name) nameEl.value = saved.name;
+  } else {
     envelope.classList.remove("open");
     amountEl.textContent = "?";
-    pill.textContent = "Đã reset";
     copyBtn.disabled = true;
-    setTimeout(()=> pill.textContent = "Chưa mở bao lì xì", 900);
+    kpiMoney.textContent = "—";
+    kpiStatus.textContent = "Chưa mở";
   }
+}
 
-  // init
-  if(isAdmin){
-    setUIState({locked:false, value:null, opened:false});
-    pill.textContent = "Admin: bạn có thể mở nhiều lần";
+function refreshControls(){
+  const admin = isAdmin();
+  setMode(admin);
+
+  if(admin){
+    openBtn.disabled = false;
+    openBtn.textContent = "Mở bao lì xì";
+    setStatus(`<span class="ok">Admin mode ✅</span> Bạn có thể mở nhiều lần để test.`);
   } else {
-    const saved = getSaved();
-    if(saved && typeof saved.value === "number"){
-      setUIState({locked:true, value:saved.value, opened:true});
-      pill.textContent = "Đã mở trước đó";
+    openBtn.disabled = isLocked();
+    openBtn.textContent = isLocked() ? "Đã mở" : "Mở bao lì xì";
+    if(isLocked()){
+      setStatus(`<span class="ok">Bạn đã mở rồi ✅</span><br>Nếu muốn thử lại, hãy dùng chế độ admin.`);
     } else {
-      setUIState({locked:false, value:null, opened:false});
-      pill.textContent = "Chưa mở bao lì xì";
+      setStatus(`<span class="warn">Lưu ý:</span> Mỗi người chỉ mở 1 lần trên mỗi trình duyệt.`);
     }
   }
+}
+
+/* Confetti */
+const fx = document.getElementById("fx");
+const ctx = fx.getContext("2d");
+let W=0,H=0, particles=[];
+function resize(){
+  W = fx.width = window.innerWidth * devicePixelRatio;
+  H = fx.height = window.innerHeight * devicePixelRatio;
+}
+window.addEventListener("resize", resize);
+resize();
+
+function confettiBurst(){
+  const colors = ["#ef4444","#f59e0b","#fde68a","#22c55e","#3b82f6","#a855f7"];
+  const count = 160;
+  particles = [];
+  for(let i=0;i<count;i++){
+    particles.push({
+      x: (window.innerWidth/2) * devicePixelRatio,
+      y: (window.innerHeight/2) * devicePixelRatio,
+      vx: (Math.random()*10 - 5) * devicePixelRatio,
+      vy: (Math.random()*-12 - 3) * devicePixelRatio,
+      g: (0.35 + Math.random()*0.25) * devicePixelRatio,
+      s: (4 + Math.random()*6) * devicePixelRatio,
+      r: Math.random()*Math.PI,
+      vr: (Math.random()*0.25 - 0.125),
+      c: colors[Math.floor(Math.random()*colors.length)],
+      life: 110 + Math.floor(Math.random()*40)
+    });
+  }
+  requestAnimationFrame(tick);
+}
+let ticking=false;
+function tick(){
+  if(ticking) return;
+  ticking=true;
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    let alive=0;
+    for(const p of particles){
+      if(p.life<=0) continue;
+      alive++;
+      p.life--;
+      p.vy += p.g;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.r += p.vr;
+
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.65);
+      ctx.restore();
+    }
+    if(alive>0){
+      requestAnimationFrame(loop);
+    } else {
+      ticking=false;
+      ctx.clearRect(0,0,W,H);
+    }
+  })();
+}
+
+/* Actions */
+function escapeHtml(str){
+  return str.replace(/[&<>"']/g, s => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[s]));
+}
+
+function openEnvelope(){
+  const admin = isAdmin();
+  if(!admin && isLocked()) return;
+
+  const playerName = (nameEl.value || "").trim();
+
+  envelope.classList.remove("shake");
+  void envelope.offsetWidth;
+  envelope.classList.add("shake");
+
+  openBtn.disabled = true;
+  setStatus("Đang mở bao lì xì...");
+
+  setTimeout(()=>{
+    const v = randAmount();
+    amountEl.textContent = formatVND(v);
+    kpiMoney.textContent = formatVND(v) + "đ";
+    kpiStatus.textContent = "Đã mở";
+    envelope.classList.add("open");
+    copyBtn.disabled = false;
+
+    confettiBurst();
+
+    if(!admin){
+      lockOnce();
+    }
+    saveResult(v, playerName);
+
+    openBtn.disabled = admin ? false : true;
+    openBtn.textContent = admin ? "Mở bao lì xì" : "Đã mở";
+    setStatus(`<span class="ok">Chúc mừng năm mới! ✅</span><br>${playerName ? ("Bạn: <b>"+escapeHtml(playerName)+"</b><br>") : ""}Kết quả: <b>${formatVND(v)}đ</b>`);
+  }, 650);
+}
+
+function copyMoney(){
+  const raw = amountEl.textContent;
+  if(!raw || raw === "?") return;
+  const v = raw.replaceAll(".","");
+  navigator.clipboard.writeText(v);
+  setStatus(`<span class="ok">Đã copy ✅</span> (đã copy: <b>${formatVND(Number(v))}đ</b>)`);
+}
+
+function resetAdmin(){
+  if(!isAdmin()) return;
+  clearLock();
+  envelope.classList.remove("open");
+  amountEl.textContent = "?";
+  copyBtn.disabled = true;
+  kpiMoney.textContent = "—";
+  kpiStatus.textContent = "Chưa mở";
+  setStatus(`<span class="ok">Đã reset ✅</span> Bạn có thể mở lại.`);
+}
+
+/* Modal */
+function openAdminModal(){
+  adminPass.value = "";
+  adminModal.classList.add("show");
+  adminPass.focus();
+}
+function closeAdminModal(){
+  adminModal.classList.remove("show");
+}
+function openHelpModal(){ helpModal.classList.add("show"); }
+function closeHelpModal(){ helpModal.classList.remove("show"); }
+
+function adminLogin(){
+  const pass = adminPass.value || "";
+  if(pass === ADMIN_PASSWORD){
+    setAdminSession(true);
+    closeAdminModal();
+    refreshControls();
+    setStatus(`<span class="ok">Đăng nhập admin thành công ✅</span> Bạn có thể mở nhiều lần.`);
+  } else {
+    setStatus(`<span class="err">Sai mật khẩu ❌</span> Thử lại.`);
+  }
+}
+
+/* Wire up */
+openBtn.addEventListener("click", openEnvelope);
+copyBtn.addEventListener("click", copyMoney);
+resetBtn.addEventListener("click", resetAdmin);
+
+adminBtn.addEventListener("click", ()=>{
+  if(isAdmin()){
+    setAdminSession(false);
+    if(params.get("admin")){
+      params.delete("admin");
+      const newUrl = location.pathname + (params.toString() ? ("?"+params.toString()) : "");
+      history.replaceState({}, "", newUrl);
+    }
+    refreshControls();
+    renderFromSaved();
+    setStatus(`<span class="warn">Đã thoát admin</span>.`);
+  } else {
+    openAdminModal();
+  }
+});
+
+adminLoginBtn.addEventListener("click", adminLogin);
+adminCloseBtn.addEventListener("click", closeAdminModal);
+adminModal.addEventListener("click", (e)=>{ if(e.target === adminModal) closeAdminModal(); });
+
+helpLink.addEventListener("click", (e)=>{ e.preventDefault(); openHelpModal(); });
+helpCloseBtn.addEventListener("click", closeHelpModal);
+helpModal.addEventListener("click", (e)=>{ if(e.target === helpModal) closeHelpModal(); });
+
+/* Init */
+(function init(){
+  if(params.get("admin") && params.get("admin") === ADMIN_TOKEN){
+    setAdminSession(true);
+  }
+  renderFromSaved();
+  refreshControls();
+})();
 </script>
 </body>
 </html>
